@@ -1,0 +1,26 @@
+{
+  "name": "vk-audioplayer",
+  "version": "0.0.1",
+  "description": "Comfortable audioplayer with vkontakte integration",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UAVova/vk-audioplayer.git"
+  },
+  "keywords": [
+    "audio",
+    "player",
+    "vkontatke",
+    "html",
+    "audio"
+  ],
+  "author": "Kulyk Volodymyr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UAVova/vk-audioplayer/issues"
+  },
+  "homepage": "https://github.com/UAVova/vk-audioplayer#readme"
+}
