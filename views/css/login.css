@@ -1,0 +1,14 @@
+body {
+  background-color: #144a88;
+}
+#vk-button {
+  width: 100%;
+  height: 40px;
+  margin: auto 0;
+  padding: 7px 16px 8px;
+  color: white;
+  background-color: #4e91dc;
+  border: 0px;
+  border-radius: 3px;
+  margin-top: 75px;
+}

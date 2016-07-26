@@ -38,8 +38,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.onmousemove = (e) => {
         e = e || window.event
         let end = 0
-        if( e.pageX) end = e.pageX
-        else if( e.clientX) end = e.clientX;
+        if( !e.pageX) {
+          end = e.clientX
+        }
+        end = e.pageX
         end > (barRanges.right - 5) ? end = (barRanges.right - 5) : end
         end < barRanges.left ? end = barRanges.left : end
         diff = end-bar.offsetLeft
