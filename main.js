@@ -30,6 +30,16 @@ app.on('ready', () => {
 
 let tokenReady = (token) => {
   vk.setToken(token)
+  console.log(token)
+  // This is needed for token to be passed automatically to
+  // request params
+  vk.setSecureRequests(true)
+  let win = new BrowserWindow({height: 600, width: 696})
+  win.loadURL(`file://${__dirname}/views/player.html`)
+  vk.request('audio.get', {'need_user': 1, 'count': 10}, (_p) => {
+    console.log(_p.response.items.length);
+    win.webContents.send('tracks-received', _p)
+  })
 }
 
 ipcMain.on('open-auth-window', (token) => {

@@ -61,6 +61,8 @@ body {
 }
 .pause-button {
   background-image: url('../images/pause.png');
+  background-position: 10px center;
+  display: none;
 }
 .next-button {
   background-image: url('../images/next.png');
