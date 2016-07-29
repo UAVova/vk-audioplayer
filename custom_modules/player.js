@@ -3,18 +3,20 @@ class Player {
   constructor() {
     this.playlist = {}
     this.player = new Audio();
-    this.nowPlaying = null
+    this.currentSongId = null
+    this.isPlaying = false
   }
 
   play(songId) {
     if (songId) {
-      if (this.nowPlaying != songId) {
+      if (this.currentSongId != songId) {
         let currentSong = this.getSong(songId)
-        this.nowPlaying = currentSong[0].id
+        this.currentSongId = currentSong[0].id
         this.player.src = currentSong[0].url
       }
     }
     this.player.play()
+    this.isPlaying = true
   }
 
   getSong(songId) {
@@ -22,8 +24,9 @@ class Player {
   }
 
   stop() {
-    if (this.nowPlaying) {
+    if (this.isPlaying) {
       this.player.pause()
+      this.isPlaying = false
     }
   }
 
