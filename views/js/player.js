@@ -10,7 +10,7 @@ let Player = new plr()
 // }
 let forEach = (array, callback, scope) => {
   for (var i = 0; i < array.length; i++) {
-    callback.call(scope, i, array[i]); // passes back stuff we need
+    callback.call(scope, i, array[i]);
   }
 }
 
@@ -70,11 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let ControlVisibility = (element, cond = true) => {
     if (!moving) {
-      console.log(element);
-      console.log(cond);
-      console.log(element.style.display);
       cond === true ? element.style.display = 'block' : element.style.display = 'none'
-      console.log(element.style.display);
     }
   }
 
@@ -91,9 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.onmousemove = (e) => {
         e = e || window.event
         let end = 0
-        // if (!e.pageX) {
-        //   end = e.clientX
-        // }
         end = e.pageX
         end > (barRanges.right - 5) ? end = (barRanges.right - 5) : end
         end < barRanges.left ? end = barRanges.left : end
