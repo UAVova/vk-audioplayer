@@ -92,10 +92,11 @@ body {
   width: 14px;
   height: 14px;
   background-color: #61a8e8;
-  left:45px;
+  left:0px;
   border-radius: 50%;
   margin-top: -11px;
   position: relative;
+  display: none;
 }
 .progress-control:hover, .progress-control:active {
   cursor: pointer;

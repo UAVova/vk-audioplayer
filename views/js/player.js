@@ -41,30 +41,9 @@ ipcRenderer.on('tracks-received', (event, playlist) => {
   let songsDiv = document.getElementsByClassName('songs')[0]
   songsDiv.innerHTML = songsDiv.innerHTML + playlistHtml
 
-  let nowPlaying = document.getElementsByClassName('now-playing')[0]
-  nowPlaying.innerHTML = `
-    <div class="player-controls">
-      <div class="play-button" id='now-playing' data-aid='${Player.playlist[0].id}'></div>
-      <div class="pause-button" id='pause-now-playing' data-aid='${Player.playlist[0].id}'></div>
-      <div class="next-button"></div>
-    </div>
-    <div class="song-details">
-      <div class="song-name" id="now-playing-title">
-        ${Player.playlist[0].artist} - ${Player.playlist[0].title}
-      </div>
-      <div class="song-progress">
-        <div class="progress-completed" id='song-completed'></div>
-        <div class="progress-control" id='song-control'></div>
-      </div>
-    </div>
-    <div class="volume-control">
-      <div class="volume-progress">
-        <div class="progress-completed" id='volume-completed' ></div>
-        <div class="progress-control" id='volume-control'></div>
-      </div>
-    </div>
-    <div class="download-button"></div>
-  `
+  document.getElementById('now-playing-title').innerHTML = `${Player.playlist[0].artist} - ${Player.playlist[0].title}`
+  document.getElementById('now-playing').dataset.aid = Player.playlist[0].id
+  document.getElementById('pause-now-playing').dataset.aid = Player.playlist[0].id
 })
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -91,7 +70,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let ControlVisibility = (element, cond = true) => {
     if (!moving) {
+      console.log(element);
+      console.log(cond);
+      console.log(element.style.display);
       cond === true ? element.style.display = 'block' : element.style.display = 'none'
+      console.log(element.style.display);
     }
   }
 
@@ -102,14 +85,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   let HandleMovement = (event, bar, barRanges, dotRanges, songControl, progress) => {
+    console.log(`${bar} - ${barRanges} - ${dotRanges} - ${songControl.classList[0]} - ${progress}`);
     event = event || window.event
     moving = true
     document.onmousemove = (e) => {
         e = e || window.event
         let end = 0
-        if (!e.pageX) {
-          end = e.clientX
-        }
+        // if (!e.pageX) {
+        //   end = e.clientX
+        // }
         end = e.pageX
         end > (barRanges.right - 5) ? end = (barRanges.right - 5) : end
         end < barRanges.left ? end = barRanges.left : end
@@ -158,11 +142,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener('click', (e) => {
     if (e.target) {
-      if (e.target.classList[0] == 'play-button' ) ToggledPlay(e.target)
-      if (e.target.classList[0] == 'pause-button' ) ToggledPause(e.target)
+      switch (e.target.classList[0]) {
+        case 'play-button':
+          ToggledPlay(e.target)
+          break
+        case 'pause-button':
+          ToggledPause(e.target)
+          break
+      }
     }
   })
-
 
   songControl.onmousedown   = HandleMovement.bind(null, event, songBar,   songBarRanges,   songDotRanges,   songControl,   songCompleted)
   volumeControl.onmousedown = HandleMovement.bind(null, event, volumeBar, volumeBarRanges, volumeDotRanges, volumeControl, volumeCompleted)
