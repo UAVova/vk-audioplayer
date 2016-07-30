@@ -2,7 +2,7 @@ class Player {
 
   constructor() {
     this.playlist = {}
-    this.player = new Audio();
+    this.audio = new Audio();
     this.currentSongId = null
     this.isPlaying = false
   }
@@ -12,10 +12,10 @@ class Player {
       if (this.currentSongId != songId) {
         let currentSong = this.getSong(songId)
         this.currentSongId = currentSong[0].id
-        this.player.src = currentSong[0].url
+        this.audio.src = currentSong[0].url
       }
     }
-    this.player.play()
+    this.audio.play()
     this.isPlaying = true
   }
 
@@ -25,7 +25,7 @@ class Player {
 
   stop() {
     if (this.isPlaying) {
-      this.player.pause()
+      this.audio.pause()
       this.isPlaying = false
     }
   }

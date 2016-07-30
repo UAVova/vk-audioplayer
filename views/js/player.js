@@ -3,6 +3,14 @@ let plr = require('../custom_modules/player.js')
 
 let Player = new plr()
 
+Player.audio.ontimeupdate = () => {
+  let percentage = (Player.audio.currentTime * 100) / Player.audio.duration
+  document.getElementById("song-completed").style.width = percentage + '%'
+  let bar = document.getElementsByClassName("song-progress")[0]
+  let control = document.getElementById("song-control")
+  control.style.left = ((percentage * bar.offsetWidth) / 100) - (control.offsetWidth / 2)
+}
+
 // JQuery style :)
 // It'll be tested later
 // let $ = function (selector) {
@@ -65,12 +73,12 @@ document.addEventListener("DOMContentLoaded", () => {
       : volumeControl.getBoundingClientRect()
     let percentage = ((((dot.left - bar.left) * 100) / bar.width) + 2)
     element.style.width = percentage + '%'
-    Player.player.currentTime = (Player.player.duration * percentage) / 100
+    Player.audio.currentTime = (Player.audio.duration * percentage) / 100
   }
 
   let ControlVisibility = (element, cond = true) => {
     if (!moving) {
-      cond === true ? element.style.display = 'block' : element.style.display = 'none'
+      cond === true ? element.style.visibility = 'visible' : element.style.visibility = 'hidden'
     }
   }
 

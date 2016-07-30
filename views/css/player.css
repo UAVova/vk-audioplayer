@@ -84,7 +84,7 @@ body {
 }
 .progress-completed {
   height: 8px;
-  width: 25%;
+  width: 0%;
   border-radius: 3px;
   background-color: #61a8e8;
 }
@@ -96,7 +96,7 @@ body {
   border-radius: 50%;
   margin-top: -11px;
   position: relative;
-  display: none;
+  visibility: hidden;
 }
 .progress-control:hover, .progress-control:active {
   cursor: pointer;
