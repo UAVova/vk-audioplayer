@@ -50,8 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let songControl = document.getElementById("song-control")
   let songBar = document.getElementsByClassName("song-progress")[0]
-  let songBarRanges = songBar.getBoundingClientRect()
-  let songDotRanges = songControl.getBoundingClientRect()
   let songCompleted = document.getElementById("song-completed")
 
   let volumeControl = document.getElementById("volume-control")
@@ -82,7 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
   volumeBar.onmouseout    = ControlVisibility.bind(null, volumeControl, false)
 
 
-  let HandleMovement = (event, bar, barRanges, dotRanges, songControl, progress) => {
+  let HandleMovement = (event, bar, songControl, progress) => {
+    let barRanges = bar.getBoundingClientRect()
+    let dotRanges = songControl.getBoundingClientRect()
     event = event || window.event
     moving = true
     document.onmousemove = (e) => {
@@ -145,6 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 
-  songControl.onmousedown   = HandleMovement.bind(null, event, songBar,   songBarRanges,   songDotRanges,   songControl,   songCompleted)
-  volumeControl.onmousedown = HandleMovement.bind(null, event, volumeBar, volumeBarRanges, volumeDotRanges, volumeControl, volumeCompleted)
+  songControl.onmousedown   = HandleMovement.bind(null, event, songBar,   songControl,   songCompleted)
+  volumeControl.onmousedown = HandleMovement.bind(null, event, volumeBar, volumeControl, volumeCompleted)
 })
