@@ -65,7 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let dot = (element.id === 'song-completed')
       ? songControl.getBoundingClientRect()
       : volumeControl.getBoundingClientRect()
-    element.style.width = ((((dot.left - bar.left) * 100) / bar.width) + 2) + '%'
+    let percentage = ((((dot.left - bar.left) * 100) / bar.width) + 2)
+    element.style.width = percentage + '%'
+    Player.player.currentTime = (Player.player.duration * percentage) / 100
   }
 
   let ControlVisibility = (element, cond = true) => {
@@ -81,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   let HandleMovement = (event, bar, barRanges, dotRanges, songControl, progress) => {
-    console.log(`${bar} - ${barRanges} - ${dotRanges} - ${songControl.classList[0]} - ${progress}`);
     event = event || window.event
     moving = true
     document.onmousemove = (e) => {
@@ -119,8 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let nowPlaying = document.getElementById('now-playing')
     if (nowPlaying.dataset.aid != element.dataset.aid) {
       let song = Player.getSong(element.dataset.aid)[0]
-      console.log('aid = ' + element.dataset.aid)
-      console.log('song = ' + song)
       document.getElementById('pause-now-playing').dataset.aid = nowPlaying.dataset.aid = song.id
       document.getElementById('now-playing-title').innerHTML = `${song.artist} - ${song.title}`
     }
