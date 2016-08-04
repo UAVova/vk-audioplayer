@@ -4,6 +4,9 @@ let plr = require('../custom_modules/player.js')
 let Player = new plr()
 
 Player.audio.ontimeupdate = () => {
+  if (Player.rewinding)
+    return
+
   let percentage = (Player.audio.currentTime * 100) / Player.audio.duration
   document.getElementById("song-completed").style.width = percentage + '%'
   let bar = document.getElementsByClassName("song-progress")[0]
@@ -65,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let volumeBarRanges = volumeBar.getBoundingClientRect()
   let volumeDotRanges = volumeControl.getBoundingClientRect()
   let volumeCompleted = document.getElementById("volume-completed")
-  let moving = false;
 
   let CalculatePlayed = (element, bar) => {
     let dot = (element.id === 'song-completed')
@@ -73,11 +75,12 @@ document.addEventListener("DOMContentLoaded", () => {
       : volumeControl.getBoundingClientRect()
     let percentage = ((((dot.left - bar.left) * 100) / bar.width) + 2)
     element.style.width = percentage + '%'
-    Player.audio.currentTime = (Player.audio.duration * percentage) / 100
+    if (!Player.rewinding)
+      Player.audio.currentTime = (Player.audio.duration * percentage) / 100
   }
 
   let ControlVisibility = (element, cond = true) => {
-    if (!moving) {
+    if (!Player.rewinding) {
       cond === true ? element.style.visibility = 'visible' : element.style.visibility = 'hidden'
     }
   }
@@ -89,24 +92,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   let HandleMovement = (event, bar, songControl, progress) => {
+    Player.rewinding = true
     let barRanges = bar.getBoundingClientRect()
     let dotRanges = songControl.getBoundingClientRect()
     event = event || window.event
-    moving = true
     document.onmousemove = (e) => {
-        e = e || window.event
-        let end = 0
-        end = e.pageX
-        end > (barRanges.right - 5) ? end = (barRanges.right - 5) : end
-        end < barRanges.left ? end = barRanges.left : end
-        diff = end-bar.offsetLeft
-        songControl.style.left =  (diff - (dotRanges.width / 2)) + "px"
-        CalculatePlayed(progress, barRanges)
+      e = e || window.event
+      let end = 0
+      end = e.pageX
+      end > (barRanges.right - 5) ? end = (barRanges.right - 5) : end
+      end < barRanges.left ? end = barRanges.left : end
+      diff = end-bar.offsetLeft
+      songControl.style.left =  (diff - (dotRanges.width / 2)) + "px"
+      CalculatePlayed(progress, barRanges)
     }
     document.onmouseup = () => {
-        CalculatePlayed(progress, barRanges)
-        moving = false
-        document.onmousemove = document.onmouseup = null
+      Player.rewinding = false
+      CalculatePlayed(progress, barRanges)
+      document.onmousemove = document.onmouseup = null
     }
   }
 

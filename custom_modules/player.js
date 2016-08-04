@@ -5,6 +5,7 @@ class Player {
     this.audio = new Audio();
     this.currentSongId = null
     this.isPlaying = false
+    this.rewinding = false
   }
 
   play(songId) {
