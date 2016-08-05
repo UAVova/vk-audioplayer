@@ -1,5 +1,6 @@
 const electron = require('electron')
 const vk_api = require('vksdk')
+const nconf = require('nconf')
 const {app, BrowserWindow, ipcMain} = electron
 const vkAuthClass = require('./custom_modules/vk_auth.js')
 // To make 'vksdk' package work, we'll need to provide those params.
@@ -10,6 +11,10 @@ let vk  = new vk_api({
     'appId'     : 0,
     'appSecret' : 0
 })
+
+nconf.argv()
+     .env()
+     .file({ file: './config.json' });
 
 let vkAuth = null
 app.on('ready', () => {
@@ -22,22 +27,29 @@ app.on('ready', () => {
   // https://discuss.atom.io/t/using-browserwindow-in-the-module/30949
   vkAuth = new vkAuthClass({ client_id: 5525255, scopes: ['audio', 'email', 'offline'] })
   vkAuth.on('token-received', tokenReady)
+  let token = nconf.get('data:token')
+  if (token) {
+    tokenReady(token)
+  } else {
+    let win = new BrowserWindow({height: 300, width: 300})
+    //win.setMenu(null);
+    win.loadURL(`file://${__dirname}/views/login.html`)
+  }
+})
 
-  let win = new BrowserWindow({height: 300, width: 300})
-  //win.setMenu(null);
-  win.loadURL(`file://${__dirname}/views/login.html`)
+app.on('quit', () => {
+  nconf.save()
 })
 
 let tokenReady = (token) => {
   vk.setToken(token)
-  console.log(token)
+  nconf.set('data:token', token)
   // This is needed for token to be passed automatically to
   // request params
   vk.setSecureRequests(true)
   let win = new BrowserWindow({height: 600, width: 696})
   win.loadURL(`file://${__dirname}/views/player.html`)
   vk.request('audio.get', {'need_user': 1, 'count': 10}, (_p) => {
-    console.log(_p.response.items.length);
     win.webContents.send('tracks-received', _p)
   })
 }
