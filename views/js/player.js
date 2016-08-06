@@ -73,10 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
     let dot = (element.id === 'song-completed')
       ? songControl.getBoundingClientRect()
       : volumeControl.getBoundingClientRect()
-    let percentage = ((((dot.left - bar.left) * 100) / bar.width) + 2)
+    let percentage = (((dot.left + (dot.width / 2)) - bar.left) * 100) / bar.width
     element.style.width = percentage + '%'
-    if (!Player.rewinding)
-      Player.audio.currentTime = (Player.audio.duration * percentage) / 100
+    if (element.id === 'song-completed'){
+      if (!Player.rewinding)
+        Player.audio.currentTime = (Player.audio.duration * percentage) / 100
+    } else {
+      Player.audio.volume = percentage / 100
+    }
   }
 
   let ControlVisibility = (element, cond = true) => {
@@ -100,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e = e || window.event
       let end = 0
       end = e.pageX
-      end > (barRanges.right - 5) ? end = (barRanges.right - 5) : end
+      end > barRanges.right ? end = barRanges.right : end
       end < barRanges.left ? end = barRanges.left : end
       diff = end-bar.offsetLeft
       songControl.style.left =  (diff - (dotRanges.width / 2)) + "px"
