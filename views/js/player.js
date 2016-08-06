@@ -3,17 +3,6 @@ let plr = require('../custom_modules/player.js')
 
 let Player = new plr()
 
-Player.audio.ontimeupdate = () => {
-  if (Player.rewinding)
-    return
-
-  let percentage = (Player.audio.currentTime * 100) / Player.audio.duration
-  document.getElementById("song-completed").style.width = percentage + '%'
-  let bar = document.getElementsByClassName("song-progress")[0]
-  let control = document.getElementById("song-control")
-  control.style.left = ((percentage * bar.offsetWidth) / 100) - (control.offsetWidth / 2)
-}
-
 // JQuery style :)
 // It'll be tested later
 // let $ = function (selector) {
@@ -159,6 +148,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   })
+
+  // Audio Events
+  Player.audio.onended = ResetButtons()
+  Player.audio.ontimeupdate = () => {
+    if (Player.rewinding)
+      return
+
+    let percentage = (Player.audio.currentTime * 100) / Player.audio.duration
+    document.getElementById("song-completed").style.width = percentage + '%'
+    let bar = document.getElementsByClassName("song-progress")[0]
+    let control = document.getElementById("song-control")
+    control.style.left = ((percentage * bar.offsetWidth) / 100) - (control.offsetWidth / 2)
+  }
 
   songControl.onmousedown   = HandleMovement.bind(null, event, songBar,   songControl,   songCompleted)
   volumeControl.onmousedown = HandleMovement.bind(null, event, volumeBar, volumeControl, volumeCompleted)
