@@ -83,21 +83,23 @@ document.addEventListener("DOMContentLoaded", () => {
   songBar.onmouseout      = ControlVisibility.bind(null, songControl,   false)
   volumeBar.onmouseout    = ControlVisibility.bind(null, volumeControl, false)
 
+  let MovementProgress = (e, bar, barRanges, dotRanges, progress) => {
+    e = e || window.event
+    let end = 0
+    end = e.pageX
+    end > barRanges.right ? end = barRanges.right : end
+    end < barRanges.left ? end = barRanges.left : end
+    diff = end-bar.offsetLeft
+    songControl.style.left =  (diff - (dotRanges.width / 2)) + "px"
+    CalculatePlayed(progress, barRanges)
+  }
 
   let HandleMovement = (event, bar, songControl, progress) => {
     Player.rewinding = true
     let barRanges = bar.getBoundingClientRect()
     let dotRanges = songControl.getBoundingClientRect()
-    event = event || window.event
     document.onmousemove = (e) => {
-      e = e || window.event
-      let end = 0
-      end = e.pageX
-      end > barRanges.right ? end = barRanges.right : end
-      end < barRanges.left ? end = barRanges.left : end
-      diff = end-bar.offsetLeft
-      songControl.style.left =  (diff - (dotRanges.width / 2)) + "px"
-      CalculatePlayed(progress, barRanges)
+      MovementProgress(e, bar, barRanges, dotRanges, progress)
     }
     document.onmouseup = () => {
       Player.rewinding = false
@@ -136,19 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
     Player.stop()
   }
 
-  document.addEventListener('click', (e) => {
-    if (e.target) {
-      switch (e.target.classList[0]) {
-        case 'play-button':
-          ToggledPlay(e.target)
-          break
-        case 'pause-button':
-          ToggledPause(e.target)
-          break
-      }
-    }
-  })
-
   // Audio Events
   Player.audio.onended = ResetButtons()
   Player.audio.ontimeupdate = () => {
@@ -162,6 +151,22 @@ document.addEventListener("DOMContentLoaded", () => {
     control.style.left = ((percentage * bar.offsetWidth) / 100) - (control.offsetWidth / 2)
   }
 
+  // DOM Events
+  songBar.addEventListener('click', (e) => {
+    MovementProgress(e, songBar, songBar.getBoundingClientRect(), songControl.getBoundingClientRect(), songCompleted)
+  })
+  document.addEventListener('click', (e) => {
+    if (e.target) {
+      switch (e.target.classList[0]) {
+        case 'play-button':
+          ToggledPlay(e.target)
+          break
+        case 'pause-button':
+          ToggledPause(e.target)
+          break
+      }
+    }
+  })
   songControl.onmousedown   = HandleMovement.bind(null, event, songBar,   songControl,   songCompleted)
   volumeControl.onmousedown = HandleMovement.bind(null, event, volumeBar, volumeControl, volumeCompleted)
 })
