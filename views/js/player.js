@@ -83,23 +83,23 @@ document.addEventListener("DOMContentLoaded", () => {
   songBar.onmouseout      = ControlVisibility.bind(null, songControl,   false)
   volumeBar.onmouseout    = ControlVisibility.bind(null, volumeControl, false)
 
-  let MovementProgress = (e, bar, barRanges, dotRanges, progress) => {
+  let MovementProgress = (e, bar, barRanges, control, controlRanges, progress) => {
     e = e || window.event
     let end = 0
     end = e.pageX
     end > barRanges.right ? end = barRanges.right : end
     end < barRanges.left ? end = barRanges.left : end
     diff = end-bar.offsetLeft
-    songControl.style.left =  (diff - (dotRanges.width / 2)) + "px"
+    control.style.left =  (diff - (controlRanges.width / 2)) + "px"
     CalculatePlayed(progress, barRanges)
   }
 
-  let HandleMovement = (event, bar, songControl, progress) => {
+  let HandleMovement = (event, bar, control, progress) => {
     Player.rewinding = true
     let barRanges = bar.getBoundingClientRect()
-    let dotRanges = songControl.getBoundingClientRect()
+    let controlRanges = control.getBoundingClientRect()
     document.onmousemove = (e) => {
-      MovementProgress(e, bar, barRanges, dotRanges, progress)
+      MovementProgress(e, bar, barRanges, control, controlRanges, progress)
     }
     document.onmouseup = () => {
       Player.rewinding = false
@@ -153,8 +153,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // DOM Events
   songBar.addEventListener('click', (e) => {
-    MovementProgress(e, songBar, songBar.getBoundingClientRect(), songControl.getBoundingClientRect(), songCompleted)
+    MovementProgress(e, songBar, songBar.getBoundingClientRect(), songControl, songControl.getBoundingClientRect(), songCompleted)
   })
+
+  volumeBar.addEventListener('click', (e) => {
+    MovementProgress(e, volumeBar, volumeBar.getBoundingClientRect(), volumeControl, volumeControl.getBoundingClientRect(), volumeCompleted)
+  })
+
   document.getElementById('next-song').addEventListener('click', (e) => {
     let song = Player.getNextSong()
     ToggledPlay(song.id)
