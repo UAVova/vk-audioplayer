@@ -6,6 +6,7 @@ class Player {
     this.currentSongId = null
     this.isPlaying = false
     this.rewinding = false
+    this.owner = {}
   }
 
   play(songId) {

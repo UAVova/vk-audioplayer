@@ -14,10 +14,11 @@ let forEach = (array, callback, scope) => {
   }
 }
 
-ipcRenderer.on('tracks-received', (event, playlist) => {
-  if (playlist.response.items.length > 0) {
-    Player.owner = playlist.response.items.splice(0, 1);
-    Player.playlist = playlist.response.items
+ipcRenderer.on('tracks-received', (event, data) => {
+  if (data.response.items.length > 0) {
+    Player.owner = data.response.items.splice(0, 1)[0]
+    Player.owner.songsCount = data.response.count
+    Player.playlist = data.response.items
   }
 
   let playlistHtml = ''
@@ -44,6 +45,9 @@ ipcRenderer.on('tracks-received', (event, playlist) => {
   document.getElementById('now-playing-title').innerHTML = `${Player.playlist[0].artist} - ${Player.playlist[0].title}`
   document.getElementById('now-playing').dataset.aid = Player.playlist[0].id
   document.getElementById('pause-now-playing').dataset.aid = Player.playlist[0].id
+  document.getElementById('username').innerHTML = Player.owner.name
+  document.getElementById('songsCount').innerHTML = `${Player.owner.songsCount} songs`
+  document.getElementById('avatar').src = Player.owner.photo
 })
 
 document.addEventListener("DOMContentLoaded", () => {
