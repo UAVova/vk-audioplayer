@@ -121,20 +121,20 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  let ToggledPlay = (element) => {
+  let ToggledPlay = (id) => {
     ResetButtons()
     let nowPlaying = document.getElementById('now-playing')
-    if (nowPlaying.dataset.aid != element.dataset.aid) {
-      let song = Player.getSong(element.dataset.aid)[0]
+    if (nowPlaying.dataset.aid != id) {
+      let song = Player.getSong(id)[0]
       document.getElementById('pause-now-playing').dataset.aid = nowPlaying.dataset.aid = song.id
       document.getElementById('now-playing-title').innerHTML = `${song.artist} - ${song.title}`
     }
-    SwitchButtons('pause-button', element.dataset.aid)
-    Player.play(element.dataset.aid)
+    SwitchButtons('pause-button', id)
+    Player.play(id)
   }
 
-  let ToggledPause = (element) => {
-    SwitchButtons('play-button', element.dataset.aid)
+  let ToggledPause = (id) => {
+    SwitchButtons('play-button', id)
     Player.stop()
   }
 
@@ -155,14 +155,18 @@ document.addEventListener("DOMContentLoaded", () => {
   songBar.addEventListener('click', (e) => {
     MovementProgress(e, songBar, songBar.getBoundingClientRect(), songControl.getBoundingClientRect(), songCompleted)
   })
+  document.getElementById('next-song').addEventListener('click', (e) => {
+    let song = Player.getNextSong()
+    ToggledPlay(song.id)
+  })
   document.addEventListener('click', (e) => {
     if (e.target) {
       switch (e.target.classList[0]) {
         case 'play-button':
-          ToggledPlay(e.target)
+          ToggledPlay(e.target.dataset.aid)
           break
         case 'pause-button':
-          ToggledPause(e.target)
+          ToggledPause(e.target.dataset.aid)
           break
       }
     }
