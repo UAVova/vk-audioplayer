@@ -140,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Audio Events
   Player.audio.onended = ResetButtons()
+  Player.audio.onended = ResetButtons
   Player.audio.ontimeupdate = () => {
     if (Player.rewinding)
       return
