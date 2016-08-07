@@ -23,6 +23,9 @@ ipcRenderer.on('tracks-received', (event, data) => {
 
   let playlistHtml = ''
   Player.playlist.forEach((item) => {
+    let title = `${item.artist} - ${item.title}`.length > 59
+              ? `${item.artist} - ${item.title}`.substring(0, 56) + '...'
+              : `${item.artist} - ${item.title}`
     playlistHtml += `
       <div class="song">
         <div class="player-controls">
@@ -31,7 +34,7 @@ ipcRenderer.on('tracks-received', (event, data) => {
         </div>
         <div class="song-details">
           <div class="song-name">
-            ${item.artist} - ${item.title}
+            ${title}
           </div>
         </div>
         <div class="download-button"></div>
@@ -40,9 +43,11 @@ ipcRenderer.on('tracks-received', (event, data) => {
     `
   })
   let songsDiv = document.getElementsByClassName('songs')[0]
+  let songTitle = document.getElementById('now-playing-title')
   songsDiv.innerHTML = songsDiv.innerHTML + playlistHtml
-
-  document.getElementById('now-playing-title').innerHTML = `${Player.playlist[0].artist} - ${Player.playlist[0].title}`
+  document.getElementById('now-playing-title').innerHTML = `${Player.playlist[0].artist} - ${Player.playlist[0].title}`.length > 36
+                                                         ? `${Player.playlist[0].artist} - ${Player.playlist[0].title}`.substring(0, 33) + '...'
+                                                         : `${Player.playlist[0].artist} - ${Player.playlist[0].title}`
   document.getElementById('now-playing').dataset.aid = Player.playlist[0].id
   document.getElementById('pause-now-playing').dataset.aid = Player.playlist[0].id
   document.getElementById('username').innerHTML = Player.owner.name
@@ -131,7 +136,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (nowPlaying.dataset.aid != id) {
       let song = Player.getSong(id)[0]
       document.getElementById('pause-now-playing').dataset.aid = nowPlaying.dataset.aid = song.id
-      document.getElementById('now-playing-title').innerHTML = `${song.artist} - ${song.title}`
+      let songTitle = document.getElementById('now-playing-title')
+      document.getElementById('now-playing-title') = `${song.artist} - ${song.title}`.length > 36
+                                                   ? `${song.artist} - ${song.title}`.substring(0, 33) + '...'
+                                                   : `${song.artist} - ${song.title}`
     }
     SwitchButtons('pause-button', id)
     Player.play(id)
