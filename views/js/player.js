@@ -43,7 +43,6 @@ ipcRenderer.on('tracks-received', (event, data) => {
     `
   })
   let songsDiv = document.getElementsByClassName('songs')[0]
-  let songTitle = document.getElementById('now-playing-title')
   songsDiv.innerHTML = songsDiv.innerHTML + playlistHtml
   document.getElementById('now-playing-title').innerHTML = `${Player.playlist[0].artist} - ${Player.playlist[0].title}`.length > 36
                                                          ? `${Player.playlist[0].artist} - ${Player.playlist[0].title}`.substring(0, 33) + '...'
@@ -136,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (nowPlaying.dataset.aid != id) {
       let song = Player.getSong(id)[0]
       document.getElementById('pause-now-playing').dataset.aid = nowPlaying.dataset.aid = song.id
-      let songTitle = document.getElementById('now-playing-title')
       document.getElementById('now-playing-title') = `${song.artist} - ${song.title}`.length > 36
                                                    ? `${song.artist} - ${song.title}`.substring(0, 33) + '...'
                                                    : `${song.artist} - ${song.title}`
