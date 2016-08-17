@@ -135,9 +135,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (nowPlaying.dataset.aid != id) {
       let song = Player.getSong(id)[0]
       document.getElementById('pause-now-playing').dataset.aid = nowPlaying.dataset.aid = song.id
-      document.getElementById('now-playing-title') = `${song.artist} - ${song.title}`.length > 36
-                                                   ? `${song.artist} - ${song.title}`.substring(0, 33) + '...'
-                                                   : `${song.artist} - ${song.title}`
+      document.getElementById('now-playing-title').innerHTML = `${song.artist} - ${song.title}`.length > 36
+                                                             ? `${song.artist} - ${song.title}`.substring(0, 33) + '...'
+                                                             : `${song.artist} - ${song.title}`
     }
     SwitchButtons('pause-button', id)
     Player.play(id)
